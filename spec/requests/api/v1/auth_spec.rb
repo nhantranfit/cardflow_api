@@ -27,7 +27,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
       post "/api/v1/auth/login", params: { email: "missing@example.com", password: "password123" }, as: :json
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Invalid email or password")
+      expect(json_body["error"]).to eq("Email not found")
     end
   end
 

@@ -5,8 +5,9 @@ module Api
 
       def login
         user = User.find_by(email: params[:email].to_s.strip.downcase)
+        return render_unauthorized("Email not found") unless user
 
-        if user&.authenticate(params[:password].to_s)
+        if user.authenticate(params[:password].to_s)
           render json: {
             token: JsonWebToken.encode({ sub: user.id, role: user.role }),
             user: user_json(user)
