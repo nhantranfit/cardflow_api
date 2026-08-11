@@ -106,7 +106,6 @@ RSpec.describe User, type: :model do
       it "rejects payout_rate for admins" do
         user = build_admin(payout_rate: 0.8)
         expect(user).not_to be_valid
-        byebug
         expect(user.errors[:payout_rate]).to include("must be blank")
       end
 
