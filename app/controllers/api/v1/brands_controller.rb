@@ -48,10 +48,6 @@ module Api
       def brand_params
         params.require(:brand).permit(:name, :description, :status)
       end
-
-      def render_validation_errors(record)
-        render json: { errors: record.errors.full_messages }, status: :unprocessable_content
-      end
     end
   end
 end

@@ -11,7 +11,13 @@ class ApplicationController < ActionController::API
   end
 
   def render_forbidden
-    render json: { error: "Forbidden", message: "You are not authorized to access this resource."
-                 }, status: :forbidden
+    render json: {
+      error: "Forbidden",
+      message: "You are not authorized to access this resource."
+    }, status: :forbidden
+  end
+
+  def render_validation_errors(record)
+    render json: { errors: record.errors.full_messages }, status: :unprocessable_content
   end
 end

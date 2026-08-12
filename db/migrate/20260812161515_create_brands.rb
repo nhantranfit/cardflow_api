@@ -2,7 +2,7 @@ class CreateBrands < ActiveRecord::Migration[7.1]
   def change
     create_table :brands do |t|
       t.string :name, null: false
-      t.text :description, null: false
+      t.text :description
       t.integer :status, null: false, default: 0
 
       t.timestamps
