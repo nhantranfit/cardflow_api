@@ -82,6 +82,7 @@ GEM
       tzinfo (~> 2.0)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
     bcrypt_pbkdf (1.1.2-arm64-darwin)
     bcrypt_pbkdf (1.1.2-x86_64-darwin)
@@ -345,6 +346,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bcrypt (~> 3.1.7)
   bootsnap
   brakeman (~> 7.1.0)
   byebug
