@@ -51,3 +51,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
+
+gem "pundit", "~> 2.5"
+gem "active_model_serializers", "~> 0.10.14"
+

@@ -34,3 +34,16 @@ clients.each do |attrs|
   )
   user.save!
 end
+
+brands = [
+  { name: "ADIDAS", description: "Adidas - German sportswear powerhouse", status: "active" },
+  { name: "PUMA", description: "Puma - Performance and lifestyle", status: "active" },
+  { name: "REEBOK", description: "Reebok - Fitness focused brand", status: "active" }
+]
+
+brands.each do |attrs|
+  Brand.find_or_create_by!(name: attrs[:name]) do |brand|
+    brand.description = attrs[:description]
+    brand.status = attrs[:status]
+  end
+end
