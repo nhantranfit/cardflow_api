@@ -1,6 +1,6 @@
 class ProductPolicy < ApplicationPolicy
   def index?
-    user.admin?
+    user.admin? || user.client?
   end
 
   def create?

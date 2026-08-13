@@ -1,6 +1,10 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_many :client_products, foreign_key: :client_id, dependent: :destroy
+
+  has_many :accessible_products, through: :client_products, source: :product
+
   enum :role, { admin: "admin", client: "client" }, validate: true
 
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
@@ -12,5 +16,5 @@ class User < ApplicationRecord
                           if: :client?
   validates :payout_rate, absence: true, if: :admin?
 
-  
+
 end

@@ -5,7 +5,14 @@ module Api
 
       def index
         authorize Product
-        render json: Product.includes(:brand).order(:name), each_serializer: ProductSerializer
+
+        products = if current_user.admin?
+                     admin_products
+                   else
+                     catalog_products
+                   end
+
+        render json: products, each_serializer: ProductSerializer
       end
 
       def create
@@ -40,6 +47,17 @@ module Api
       end
 
       private
+
+      def admin_products
+        Product.includes(:brand).order(:name)
+      end
+
+      def catalog_products
+        current_user.accessible_products
+                    .active
+                    .includes(:brand)
+                    .order(:name)
+      end
 
       def set_product
         @product = Product.find(params[:id])
