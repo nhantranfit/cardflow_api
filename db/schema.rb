@@ -10,9 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_11_143416) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_12_172900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "brands", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_brands_on_name", unique: true
+    t.check_constraint "status = ANY (ARRAY[0, 1])", name: "brands_status_check"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.bigint "brand_id", null: false
+    t.string "name", null: false
+    t.decimal "price", precision: 12, scale: 2, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_products_on_brand_id"
+    t.check_constraint "status = ANY (ARRAY[0, 1])", name: "products_status_check"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
@@ -26,4 +47,5 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_11_143416) do
     t.check_constraint "role::text = ANY (ARRAY['admin'::character varying, 'client'::character varying]::text[])", name: "users_role_check"
   end
 
+  add_foreign_key "products", "brands"
 end

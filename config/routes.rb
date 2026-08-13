@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "auth/login", to: "auth#login"
       get "auth/me", to: "auth#me"
+      resources :brands, only: %i[index create update destroy]
+      resources :products, only: %i[index create update destroy]
     end
   end
 end
