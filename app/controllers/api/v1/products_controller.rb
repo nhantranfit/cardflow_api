@@ -9,7 +9,10 @@ module Api
         products = if current_user.admin?
                      admin_products
                    else
-                     catalog_products
+                    ProductCatalogQuery.new(
+                      user: current_user,
+                      params: params
+                    ).call
                    end
 
         render json: products, each_serializer: ProductSerializer
@@ -50,13 +53,6 @@ module Api
 
       def admin_products
         Product.includes(:brand).order(:name)
-      end
-
-      def catalog_products
-        current_user.accessible_products
-                    .active
-                    .includes(:brand)
-                    .order(:name)
       end
 
       def set_product
