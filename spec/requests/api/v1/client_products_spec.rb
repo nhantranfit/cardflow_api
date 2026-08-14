@@ -106,7 +106,8 @@ RSpec.describe "Api::V1::ClientProducts", type: :request do
                headers: auth_headers(admin)
       }.to change(ClientProduct, :count).by(-1)
 
-      expect(response).to have_http_status(:no_content)
+      expect(response).to have_http_status(:ok)
+      expect(json_body["message"]).to eq("Product deleted successfully")
     end
 
     it "returns not found when assignment does not exist" do
