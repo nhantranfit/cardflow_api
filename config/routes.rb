@@ -7,6 +7,9 @@ Rails.application.routes.draw do
       get "auth/me", to: "auth#me"
       resources :brands, only: %i[index create update destroy]
       resources :products, only: %i[index create update destroy]
+      resources :clients, only: %i[index create update destroy] do
+        resources :products, only: %i[create destroy], controller: "client_products", param: :product_id
+      end
     end
   end
 end

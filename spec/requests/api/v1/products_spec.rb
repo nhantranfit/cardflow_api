@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Products", type: :request do
-  let(:admin) { create_user(email: "admin@example.com", role: :admin) }
-  let(:client) { create_user(email: "client@example.com", role: :client) }
-  let!(:brand) { Brand.create!(name: "Acme", description: "Cards", status: :active) }
+  let(:admin) { create_user(email: "ops.admin@cardflow.com", role: :admin) }
+  let(:client) { create_user(email: "lan.nguyen@retailhub.vn", role: :client) }
+  let!(:brand) { Brand.create!(name: "Adidas", description: "Sportswear", status: :active) }
 
   def create_product(attrs = {})
     Product.create!({
@@ -15,25 +15,42 @@ RSpec.describe "Api::V1::Products", type: :request do
   end
 
   describe "GET /api/v1/products" do
-    before { create_product }
+    let!(:assigned_active) { create_product(name: "Assigned Active") }
+    let!(:assigned_inactive) { create_product(name: "Assigned Inactive", status: :inactive) }
+    let!(:unassigned_active) { create_product(name: "Unassigned Active") }
 
-    it "returns products for admin" do
+    before do
+      ClientProduct.create!(client: client, product: assigned_active)
+      ClientProduct.create!(client: client, product: assigned_inactive)
+    end
+
+    it "returns all products for admin" do
       get "/api/v1/products", headers: auth_headers(admin)
+
+      expect(response).to have_http_status(:ok)
+      names = json_body["products"].map { |product| product["name"] }
+      expect(names).to contain_exactly("Assigned Active", "Assigned Inactive", "Unassigned Active")
+    end
+
+    it "returns only assigned active products for client" do
+      get "/api/v1/products", headers: auth_headers(client)
 
       expect(response).to have_http_status(:ok)
       expect(json_body["products"].size).to eq(1)
       expect(json_body["products"].first).to include(
         "brand_name" => brand.name,
-        "name" => "Gift Card 100",
-        "price" => "100.0",
+        "name" => "Assigned Active",
         "status" => "active"
       )
     end
 
-    it "forbids client" do
-      get "/api/v1/products", headers: auth_headers(client)
+    it "returns an empty list when client has no accessible active products" do
+      other_client = create_user(email: "minh.tran@shopmart.vn", role: :client)
 
-      expect(response).to have_http_status(:forbidden)
+      get "/api/v1/products", headers: auth_headers(other_client)
+
+      expect(response).to have_http_status(:ok)
+      expect(json_body["products"]).to eq([])
     end
 
     it "requires authentication" do

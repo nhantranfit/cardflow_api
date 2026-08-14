@@ -3,6 +3,8 @@ class ApplicationController < ActionController::API
   include Pundit::Authorization
 
   rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+
 
   private
 
@@ -19,5 +21,13 @@ class ApplicationController < ActionController::API
 
   def render_validation_errors(record)
     render json: { errors: record.errors.full_messages }, status: :unprocessable_content
+  end
+
+  def render_not_found(exception)
+    @exception = exception
+    render json: {
+      error: "Not Found",
+      message: @exception.message
+    }, status: :not_found and return
   end
 end
