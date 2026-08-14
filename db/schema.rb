@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_13_165902) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_14_112638) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,23 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_13_165902) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_brands_on_name", unique: true
     t.check_constraint "status = ANY (ARRAY[0, 1])", name: "brands_status_check"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "product_id", null: false
+    t.string "activation_number", null: false
+    t.string "pin"
+    t.decimal "purchase_amount", precision: 12, scale: 2, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activation_number"], name: "index_cards_on_activation_number", unique: true
+    t.index ["client_id"], name: "index_cards_on_client_id"
+    t.index ["product_id"], name: "index_cards_on_product_id"
+    t.check_constraint "purchase_amount > 0::numeric", name: "cards_purchase_amount_check"
+    t.check_constraint "status = ANY (ARRAY[0, 1])", name: "cards_status_check"
   end
 
   create_table "client_products", force: :cascade do |t|
@@ -57,6 +74,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_13_165902) do
     t.check_constraint "role::text = ANY (ARRAY['admin'::character varying, 'client'::character varying]::text[])", name: "users_role_check"
   end
 
+  add_foreign_key "cards", "products"
+  add_foreign_key "cards", "users", column: "client_id"
   add_foreign_key "client_products", "products"
   add_foreign_key "client_products", "users", column: "client_id"
   add_foreign_key "products", "brands"
