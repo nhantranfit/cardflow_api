@@ -10,6 +10,9 @@ Rails.application.routes.draw do
       resources :clients, only: %i[index create update destroy] do
         resources :products, only: %i[create destroy], controller: "client_products", param: :product_id
       end
+      resources :cards, only: %i[index create] do
+        patch :cancel, on: :member
+      end
     end
   end
 end

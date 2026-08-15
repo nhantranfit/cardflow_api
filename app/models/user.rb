@@ -2,8 +2,8 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :client_products, foreign_key: :client_id, dependent: :destroy
-
   has_many :accessible_products, through: :client_products, source: :product
+  has_many :cards, foreign_key: :client_id, dependent: :restrict_with_error
 
   enum :role, { admin: "admin", client: "client" }, validate: true
 

@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
   belongs_to :brand
+  has_many :cards, dependent: :restrict_with_error
 
   enum :status, { active: 0, inactive: 1 }, validate: true
 
