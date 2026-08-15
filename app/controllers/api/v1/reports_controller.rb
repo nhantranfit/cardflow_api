@@ -6,12 +6,12 @@ module Api
 
         reports = if current_user.admin?
                     AdminOperationsReportQuery.new(params: report_params).call
-                  else
+        else
                     ClientOperationsReportQuery.new(
                       client: current_user,
                       params: report_params
                     ).call
-                  end
+        end
 
         render json: reports, each_serializer: OperationReportSerializer, root: "reports"
       end
