@@ -9,10 +9,10 @@ module Api
         products = if current_user.admin?
                      admin_products
         else
-                    ProductCatalogQuery.new(
-                      user: current_user,
-                      params: params
-                    ).call
+                     ProductCatalogQuery.new(
+                       user: current_user,
+                       params: params
+                     ).call
         end
 
         render json: products, each_serializer: ProductSerializer
@@ -23,6 +23,7 @@ module Api
         product = Product.new(product_params)
 
         if product.save
+          log_action("create", product)
           render json: product, serializer: ProductSerializer, status: :created
         else
           render_validation_errors(product)
@@ -33,6 +34,7 @@ module Api
         authorize @product
 
         if @product.update(product_params)
+          log_action("update", @product)
           render json: @product, serializer: ProductSerializer
         else
           render_validation_errors(@product)
@@ -43,6 +45,7 @@ module Api
         authorize @product
 
         if @product.destroy
+          log_action("destroy", @product)
           render json: { message: "Product deleted successfully" }, status: :ok
         else
           render_validation_errors(@product)

@@ -30,4 +30,8 @@ class ApplicationController < ActionController::API
       message: @exception.message
     }, status: :not_found and return
   end
+
+  def log_action(action, resource, user: current_user)
+    ActionLogService.new(user, action, resource).call
+  end
 end

@@ -13,6 +13,7 @@ module Api
         brand = Brand.new(brand_params)
 
         if brand.save
+          log_action("create", brand)
           render json: brand, serializer: BrandSerializer, status: :created
         else
           render_validation_errors(brand)
@@ -23,6 +24,7 @@ module Api
         authorize @brand
 
         if @brand.update(brand_params)
+          log_action("update", @brand)
           render json: @brand, serializer: BrandSerializer
         else
           render_validation_errors(@brand)
@@ -33,6 +35,7 @@ module Api
         authorize @brand
 
         if @brand.destroy
+          log_action("destroy", @brand)
           render json: { message: "Brand deleted successfully" }, status: :ok
         else
           render_validation_errors(@brand)

@@ -13,6 +13,7 @@ module Api
         client = User.new(client_params.merge(role: :client))
 
         if client.save
+          log_action("create", client)
           render json: client, serializer: ClientSerializer, root: "client", status: :created
         else
           render_validation_errors(client)
@@ -23,6 +24,7 @@ module Api
         authorize @client, policy_class: ClientPolicy
 
         if @client.update(client_params)
+          log_action("update", @client)
           render json: @client, serializer: ClientSerializer, root: "client"
         else
           render_validation_errors(@client)
@@ -33,6 +35,7 @@ module Api
         authorize @client, policy_class: ClientPolicy
 
         if @client.destroy
+          log_action("destroy", @client)
           render json: { message: "Client deleted successfully" }, status: :ok
         else
           render_validation_errors(@client)
