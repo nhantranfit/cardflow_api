@@ -137,7 +137,7 @@ RSpec.describe "Api::V1::Cards", type: :request do
 
       expect(response).to have_http_status(:ok)
       ids = json_body["cards"].map { |c| c["id"] }
-      expect(ids).to eq([own_card.id])
+      expect(ids).to eq([ own_card.id ])
       expect(json_body["cards"].first).to include(
         "client_id" => client.id,
         "product_id" => product.id,
@@ -233,4 +233,3 @@ RSpec.describe "Api::V1::Cards", type: :request do
     end
   end
 end
-

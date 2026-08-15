@@ -61,7 +61,7 @@ RSpec.describe ClientOperationsReportQuery do
       newer = issue!
       newer.update_columns(created_at: 1.day.ago)
 
-      expect(call_query.map(&:id)).to eq([newer.id, older.id])
+      expect(call_query.map(&:id)).to eq([ newer.id, older.id ])
     end
   end
 end

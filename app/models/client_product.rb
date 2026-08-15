@@ -2,7 +2,7 @@ class ClientProduct < ApplicationRecord
   belongs_to :client, class_name: "User"
   belongs_to :product
 
-  validates :client_id, uniqueness: { scope: :product_id , message: "already has access to this product"}
+  validates :client_id, uniqueness: { scope: :product_id, message: "already has access to this product" }
   validate :client_must_be_client_role
 
   private
