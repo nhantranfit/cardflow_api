@@ -19,6 +19,7 @@ module Api
           product_id: card_params[:product_id]
         ).call
 
+        log_action("create", card)
         render json: card, serializer: CardSerializer, status: :created
       rescue IssueCard::Forbidden => e
         render json: { error: "Forbidden", message: e.message }, status: :forbidden
@@ -34,9 +35,9 @@ module Api
             status: :cancelled,
             cancelled_at: Time.current
           )
+          log_action("cancel", @card)
 
-          render json: @card,
-                 serializer: CardSerializer
+          render json: @card, serializer: CardSerializer
         else
           render json: { error: "Card is already cancelled" },
                  status: :unprocessable_content

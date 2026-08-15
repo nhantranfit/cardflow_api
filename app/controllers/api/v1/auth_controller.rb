@@ -8,6 +8,7 @@ module Api
         return render_unauthorized("Email not found") unless user
 
         if user.authenticate(params[:password].to_s)
+          log_action("login", user, user: user)
           render json: {
             token: JsonWebToken.encode({ sub: user.id, role: user.role }),
             user: user_json(user)

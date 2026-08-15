@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_14_112638) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_15_172912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "action_logs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "action"
+    t.string "resource_type", null: false
+    t.bigint "resource_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_type", "resource_id"], name: "index_action_logs_on_resource"
+    t.index ["user_id"], name: "index_action_logs_on_user_id"
+  end
 
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
@@ -74,6 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_14_112638) do
     t.check_constraint "role::text = ANY (ARRAY['admin'::character varying, 'client'::character varying]::text[])", name: "users_role_check"
   end
 
+  add_foreign_key "action_logs", "users"
   add_foreign_key "cards", "products"
   add_foreign_key "cards", "users", column: "client_id"
   add_foreign_key "client_products", "products"
