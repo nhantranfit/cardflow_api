@@ -8,12 +8,12 @@ module Api
 
         products = if current_user.admin?
                      admin_products
-                   else
+        else
                     ProductCatalogQuery.new(
                       user: current_user,
                       params: params
                     ).call
-                   end
+        end
 
         render json: products, each_serializer: ProductSerializer
       end

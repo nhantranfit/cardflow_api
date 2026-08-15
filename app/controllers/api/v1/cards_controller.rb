@@ -23,7 +23,7 @@ module Api
       rescue IssueCard::Forbidden => e
         render json: { error: "Forbidden", message: e.message }, status: :forbidden
       rescue IssueCard::Unprocessable => e
-        render json: { errors: [e.message] }, status: :unprocessable_content
+        render json: { errors: [ e.message ] }, status: :unprocessable_content
       end
 
       def cancel

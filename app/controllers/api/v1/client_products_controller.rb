@@ -31,7 +31,6 @@ module Api
 
       def set_client
         @client = User.client.find(params[:client_id])
-
       end
 
       def set_product

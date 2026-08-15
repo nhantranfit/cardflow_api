@@ -15,6 +15,4 @@ class User < ApplicationRecord
                           numericality: { greater_than: 0, less_than_or_equal_to: 1 },
                           if: :client?
   validates :payout_rate, absence: true, if: :admin?
-
-
 end

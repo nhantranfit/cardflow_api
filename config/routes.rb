@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :cards, only: %i[index create] do
         patch :cancel, on: :member
       end
+      resources :reports, only: %i[index]
     end
   end
 end
