@@ -78,6 +78,7 @@ RSpec.describe "Api::V1::Cards", type: :request do
 
       expect(response).to have_http_status(:forbidden)
       expect(json_body["error"]).to eq("Forbidden")
+      expect(json_body["message"]).to eq("You do not have access to this product")
     end
 
     it "returns unprocessable when product is inactive" do
@@ -91,7 +92,10 @@ RSpec.describe "Api::V1::Cards", type: :request do
       }.not_to change(Card, :count)
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(json_body["errors"]).to include("Product is not active")
+      expect(json_body).to eq(
+        "error" => "Unprocessable Entity",
+        "message" => "Product is not active"
+      )
     end
 
     it "returns not found when product does not exist" do
@@ -195,7 +199,10 @@ RSpec.describe "Api::V1::Cards", type: :request do
       patch "/api/v1/cards/#{card.id}/cancel", headers: auth_headers(client), as: :json
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(json_body["error"]).to eq("Card is already cancelled")
+      expect(json_body).to eq(
+        "error" => "Unprocessable Entity",
+        "message" => "Card is already cancelled"
+      )
       expect(card.reload.cancelled_at).to be_within(1.second).of(1.hour.ago)
     end
 

@@ -20,14 +20,20 @@ RSpec.describe "Api::V1::Auth", type: :request do
       post "/api/v1/auth/login", params: { email: user.email, password: "wrong" }, as: :json
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Invalid email or password")
+      expect(json_body).to eq(
+        "error" => "Unauthorized",
+        "message" => "Invalid email or password"
+      )
     end
 
     it "returns unauthorized for unknown email" do
       post "/api/v1/auth/login", params: { email: "missing@example.com", password: "password123" }, as: :json
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Email not found")
+      expect(json_body).to eq(
+        "error" => "Unauthorized",
+        "message" => "Email not found"
+      )
     end
   end
 
@@ -49,21 +55,30 @@ RSpec.describe "Api::V1::Auth", type: :request do
       get "/api/v1/auth/me"
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Missing token")
+      expect(json_body).to eq(
+        "error" => "Unauthorized",
+        "message" => "Missing token"
+      )
     end
 
     it "returns unauthorized for an invalid token" do
       get "/api/v1/auth/me", headers: { "Authorization" => "Bearer invalid.token" }
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Invalid or expired token")
+      expect(json_body).to eq(
+        "error" => "Unauthorized",
+        "message" => "Invalid or expired token"
+      )
     end
 
     it "returns unauthorized for an expired token" do
       get "/api/v1/auth/me", headers: auth_headers(user, exp: 1.hour.ago)
 
       expect(response).to have_http_status(:unauthorized)
-      expect(json_body["error"]).to eq("Invalid or expired token")
+      expect(json_body).to eq(
+        "error" => "Unauthorized",
+        "message" => "Invalid or expired token"
+      )
     end
   end
 end

@@ -76,7 +76,8 @@ RSpec.describe "Api::V1::ClientProducts", type: :request do
       }.not_to change(ClientProduct, :count)
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(json_body["errors"]).to be_present
+      expect(json_body["error"]).to eq("Unprocessable Entity")
+      expect(json_body["message"]).to be_present
     end
 
     it "forbids client" do
