@@ -22,9 +22,9 @@ module Api
         log_action("create", card)
         render json: card, serializer: CardSerializer, status: :created
       rescue IssueCard::Forbidden => e
-        render json: { error: "Forbidden", message: e.message }, status: :forbidden
+        render_error(error: "Forbidden", message: e.message, status: :forbidden)
       rescue IssueCard::Unprocessable => e
-        render json: { errors: [ e.message ] }, status: :unprocessable_content
+        render_error(error: "Unprocessable Entity", message: e.message, status: :unprocessable_content)
       end
 
       def cancel
@@ -39,8 +39,11 @@ module Api
 
           render json: @card, serializer: CardSerializer
         else
-          render json: { error: "Card is already cancelled" },
-                 status: :unprocessable_content
+          render_error(
+            error: "Unprocessable Entity",
+            message: "Card is already cancelled",
+            status: :unprocessable_content
+          )
         end
       end
 

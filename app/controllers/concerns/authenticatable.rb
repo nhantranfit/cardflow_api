@@ -25,6 +25,9 @@ module Authenticatable
   end
 
   def render_unauthorized(message)
-    render json: { error: message }, status: :unauthorized
+    render json: {
+      error: "Unauthorized",
+      message: message
+    }, status: :unauthorized
   end
 end

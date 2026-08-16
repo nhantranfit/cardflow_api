@@ -65,13 +65,18 @@ RSpec.describe "Api::V1::Brands", type: :request do
            as: :json
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(json_body["errors"]).to include("Name can't be blank")
+      expect(json_body["error"]).to eq("Unprocessable Entity")
+      expect(json_body["message"]).to include("Name can't be blank")
     end
 
     it "forbids client" do
       post "/api/v1/brands", params: params, headers: auth_headers(client), as: :json
 
       expect(response).to have_http_status(:forbidden)
+      expect(json_body).to include(
+        "error" => "Forbidden",
+        "message" => "You are not authorized to access this resource."
+      )
     end
   end
 
